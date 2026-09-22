@@ -5,6 +5,13 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
 
+app.get("/", (req, res) => {
+  res.json({
+    status: "online",
+    message: "WhatsApp API server is running"
+  });
+});
+
 // WhatsApp Webhook verification
 app.get("/webhook", (req, res) => {
   const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
@@ -28,14 +35,10 @@ app.post("/webhook", (req, res) => {
   res.sendStatus(200);
 });
 
-// Health check
-app.get("/", (req, res) => {
-  res.json({
-    status: "online",
-    message: "WhatsApp API server is running"
-  });
-});
+// Send WhatsApp message
+app.post("/send-message", async (req, res) => {
+  try {
+    const { to, message } = req.body;
 
-app.listen(PORT, "0.0.0.0", () => {
-  console.log("Server running on port " + PORT);
-});
+    if (!to || !message) {
+      return res.statu
