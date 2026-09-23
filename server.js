@@ -36,23 +36,28 @@ app.post("/webhook", async (req, res) => {
 
     const from = message.from;
 
-    await axios.post(
-      https://graph.facebook.com/v23.0/${process.env.PHONE_NUMBER_ID}/messages,
-      {
-        messaging_product: "whatsapp",
-        to: from,
-        type: "text",
-        text: {
-          body: "Hello! 👋 Kaise help kar sakte hain?"
-        }
-      },
-      {
-        headers: {
-          Authorization: Bearer ${process.env.ACCESS_TOKEN},
-          "Content-Type": "application/json"
-        }
-      }
-    );
+    const url =
+  "https://graph.facebook.com/v23.0/" +
+  process.env.PHONE_NUMBER_ID +
+  "/messages";
+
+await axios.post(
+  url,
+  {
+    messaging_product: "whatsapp",
+    to: from,
+    type: "text",
+    text: {
+      body: "Hello! Kaise help kar sakte hain?"
+    }
+  },
+  {
+    headers: {
+      Authorization: "Bearer " + process.env.ACCESS_TOKEN,
+      "Content-Type": "application/json"
+    }
+  }
+);
 
     console.log("Auto-reply sent to:", from);
 
