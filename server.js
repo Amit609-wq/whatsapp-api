@@ -22,12 +22,50 @@ app.get("/webhook", (req, res) => {
 });
 
 // WhatsApp incoming messages
-app.post("/webhook", (req, res) => {
+app.post("/webhook", async (req, res) => {
   console.log("WhatsApp webhook received:");
   console.log(JSON.stringify(req.body, null, 2));
 
-  res.sendStatus(200);
-});
+  try {
+    const message =
+      req.body.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
+
+    if (!message) {
+      return res.sendStatus(200);
+    }
+
+    const from = message.from;
+
+    await axios.post(
+      https://graph.facebook.com/v23.0/${process.env.PHONE_NUMBER_ID}/messages,
+      {
+        messaging_product: "whatsapp",
+        to: from,
+        type: "text",
+        text: {
+          body: "Hello! 👋 Kaise help kar sakte hain?"
+        }
+      },
+      {
+        headers: {
+          Authorization: Bearer ${process.env.ACCESS_TOKEN},
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    console.log("Auto-reply sent to:", from);
+
+    return res.sendStatus(200);
+
+  } catch (error) {
+    console.error(
+      "Auto-reply error:",
+      error.response?.data || error.message
+    );
+
+    return res.sendStatus(200);
+  }
 
 // Send WhatsApp message
 app.post("/send-message", async (req, res) => {
