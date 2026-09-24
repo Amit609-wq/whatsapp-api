@@ -132,7 +132,23 @@ app.post("/send-message", async (req, res) => {
     });
   }
 });
-
+// Privacy Policy
+app.get("/privacy-policy", (req, res) => {
+  res.send(`
+    <html>
+      <head>
+        <title>Privacy Policy</title>
+      </head>
+      <body>
+        <h1>Privacy Policy</h1>
+        <p>This app provides WhatsApp messaging services.</p>
+        <p>We use information only to provide and operate the requested service.</p>
+        <p>We do not sell personal information to third parties.</p>
+        <p>For privacy questions, please contact us through the app contact email.</p>
+      </body>
+    </html>
+  `);
+});
 // Home route
 app.get("/", (req, res) => {
   res.send("WhatsApp API is running!");
